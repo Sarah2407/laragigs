@@ -34,7 +34,7 @@
         @else
         <tr class="border-gray-300">
           <td class="px-4 py-8 border-t border-b border-gray-300 text-lg">
-            <p class="text-center">No Listings Found</p>
+            <p class="text-center">No Listings Found.</p>
           </td>
         </tr>
         @endunless
