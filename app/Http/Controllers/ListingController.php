@@ -10,7 +10,10 @@ class ListingController extends Controller
     public function index()
     {
         return view('listings.index', [
-            'listings' => Listing::all()
+            //gets all listings and sorts according to latest. used instead of all() function
+            'listings' => Listing::latest()
+            ->filter(request(['tag', 'search']))
+            ->paginate(2)
         ]);
     }
 
@@ -23,12 +26,30 @@ class ListingController extends Controller
 
     public function create()
     {
-        
+        return view('listings.create');
     }
 
     public function store(Request $request)
     {
-        //
+        $inputFields = $request->validate([
+            'title' => 'required',
+            'company' => 'required',
+            'location' => 'required',
+            'website' => 'required',
+            'email' => ['required', 'email'],
+            'tags' => 'required',
+            'description' => 'required'
+            
+        ]);
+
+        if($request->hasFile('logo'))
+        {
+            $inputFields['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        Listing::create($inputFields);
+
+        return redirect('/')->with('message', 'Listing created successfully');
     }
 
     public function edit(Listing $listing)
